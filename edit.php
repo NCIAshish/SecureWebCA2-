@@ -70,43 +70,61 @@
                 <!-- /.row -->
 
 
+             <?php
+include "connection.php"; 
+$query = 'SELECT * FROM people
+              WHERE
+              people_id ='.$_GET['id'];
+            $result = mysqli_query($db, $query) or die(mysqli_error($db));
+              while($row = mysqli_fetch_array($result))
+              {   
+                $zz= $row['people_id'];
+                $i= $row['first_name'];
+                $a=$row['last_name'];
+                $b=$row['mid_name'];
+                $c=$row['address'];
+                $d=$row['contact'];
+                $e=$row['comment'];
+             
+              }
+              
+              $id = $_GET['id'];
+         
+?>
+
              <div class="col-lg-12">
-                  <h2>User Information's</h2>
+                  <h2>Edit Records</h2>
                       <div class="col-lg-6">
-                       <?php include 'connection.php'; ?>
 
-                        <?php $results = mysqli_query($db, "SELECT * FROM people"); ?>
+                        <form role="form" method="post" action="edit1.php">
+                            
+                            <div class="form-group">
+                                <input type="hidden" name="id" value="<?php echo $zz; ?>" />
+                            </div>
+                            <div class="form-group">
+                              <input class="form-control" placeholder="First Name" name="firstname" value="<?php echo $i; ?>">
+                            </div>
+                            <div class="form-group">
+                              <input class="form-control" placeholder="Last Name" name="lastname" value="<?php echo $a; ?>">
+                            </div> 
+                            <div class="form-group">
+                              <input class="form-control" placeholder="Middle Name" name="Middlename" value="<?php echo $b; ?>">
+                            </div> 
+                            <div class="form-group">
+                              <input class="form-control" placeholder="Address" name="Address" value="<?php echo $c; ?>">
+                            </div> 
+                            <div class="form-group">
+                              <input class="form-control" placeholder="Contact" name="Contact" value="<?php echo $d; ?>">
+                            </div> 
+                            <div class="form-group">
+                             <label>Comment</label>
+                              <textarea class="form-control" rows="3"  name="comment"><?php echo $e; ?></textarea>
+                            </div>  
+                            <button type="submit" class="btn btn-default">Update Record</button>
+                         
 
-<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-    <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Middle Name</th>
-            <th>Address</th>
-            <th>Contact Number</th>
-            <th>Comment</th>
-            <th colspan="2">Action</th>
-        </tr>
-    </thead>
-    
-    <?php while ($row = mysqli_fetch_array($results)) { ?>
-        <tr>
-            <td><?php echo $row['first_name']; ?></td>
-            <td><?php echo $row['last_name']; ?></td>
-             <td><?php echo $row['mid_name']; ?></td>
-            <td><?php echo $row['address']; ?></td>
-             <td><?php echo $row['contact']; ?></td>
-            <td><?php echo $row['comment']; ?></td>
-            <td>
-                <a href="edit.php?id=<?php echo $row['people_id']; ?>" class="edit_btn" >Edit</a>
-            </td>
-            <td>
-                <a href="del.php?id=<?php echo $row['people_id']; ?>" class="del_btn">Delete</a>
-            </td>
-        </tr>
-    <?php } ?>
-</table>
+
+                      </form>  
                     </div>
                 </div>
                 
