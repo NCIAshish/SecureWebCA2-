@@ -27,6 +27,7 @@
 
 
 
+
     <div id="wrapper">
 
         <!-- Navigation -->
@@ -47,6 +48,8 @@
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
                         <a href="index.php"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="addrecords.php"><i class="fa fa-fw fa-plus"></i> Add Records</a>
+                        <a href="../logout.php"><i class="fa fa-fw fa-sign-out"></i> Logout</a>
                     </li>
                     
                 </ul>
@@ -75,11 +78,16 @@
                       <div class="col-lg-6">
                        <?php include 'connection.php'; ?>
 
-                        <?php $results = mysqli_query($db, "SELECT * FROM people"); ?>
+                        <?php 
+                        $results = mysqli_query($link, "SELECT * FROM people"); 
+                        $row_number = 1;
+                        ?>
 
 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
     <thead>
         <tr>
+            <th>ID</th>
+            <th>Image</th>  
             <th>First Name</th>
             <th>Last Name</th>
             <th>Middle Name</th>
@@ -92,17 +100,22 @@
     
     <?php while ($row = mysqli_fetch_array($results)) { ?>
         <tr>
+            <?php $row_number;?>
+            <td><?php echo $row_number++; ?></td>
+            <td><?php echo "<img src='" . $row['img'] . "' height='100px' width='100px'>" ?></td>
             <td><?php echo $row['first_name']; ?></td>
             <td><?php echo $row['last_name']; ?></td>
-             <td><?php echo $row['mid_name']; ?></td>
+            <td><?php echo $row['mid_name']; ?></td>
             <td><?php echo $row['address']; ?></td>
-             <td><?php echo $row['contact']; ?></td>
+            <td><?php echo $row['contact']; ?></td>
             <td><?php echo $row['comment']; ?></td>
             <td>
-                <a href="edit.php?id=<?php echo $row['people_id']; ?>" class="edit_btn" >Edit</a>
+                <a href="edit.php?id=<?php echo $row['id']; ?>" class="edit_btn" >Edit</a>
             </td>
             <td>
-                <a href="del.php?id=<?php echo $row['people_id']; ?>" class="del_btn">Delete</a>
+            <a href="del.php?id=<?php echo $row['id']; ?>" title="Delete Record" class="del_btn">Delete</a>
+        
+           <!-- href="del.php?id='. $row['id'] .'" -->
             </td>
         </tr>
     <?php } ?>
