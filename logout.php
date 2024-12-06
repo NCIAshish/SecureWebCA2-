@@ -1,21 +1,36 @@
 <?php
 session_start();
 
-// Clear all session data
+// Regenerate session ID to prevent session fixation attacks
+session_regenerate_id(true);
+
+// Unset all session variables
+$_SESSION = array();
+
+// If there's a session cookie, delete it
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
+// Destroy the session
 session_destroy();
 
-// Clear all cookies
+// Destroy all other cookies
 if (isset($_SERVER['HTTP_COOKIE'])) {
     $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
     foreach($cookies as $cookie) {
         $parts = explode('=', $cookie);
         $name = trim($parts[0]);
-        setcookie($name, '', time() - 3600, '/');
-        setcookie($name, '', time() - 3600, '/', $_SERVER['HTTP_HOST']);
+        setcookie($name, '', time() - 42000, '/');
     }
 }
 
-// Redirect to index page
-header("Location: index.php");
+
+// Redirect to signin page
+header('Location: index.php');
 exit();
 ?>

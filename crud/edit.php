@@ -74,11 +74,11 @@
 include "connection.php"; 
 $query = 'SELECT * FROM people
               WHERE
-              people_id ='.$_GET['id'];
-            $result = mysqli_query($db, $query) or die(mysqli_error($db));
+              id ='.$_GET['id'];
+            $result = mysqli_query($link, $query) or die(mysqli_error($link));
               while($row = mysqli_fetch_array($result))
               {   
-                $zz= $row['people_id'];
+                $zz= $row['id'];
                 $i= $row['first_name'];
                 $a=$row['last_name'];
                 $b=$row['mid_name'];

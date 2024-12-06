@@ -65,7 +65,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                           PHP CRUD <small>Create, Read, Update and Delete</small>
+                           PHP CRUD <small>Admin Operations Create, Read, Update and Delete</small>
                         </h1>
                        
                     </div>

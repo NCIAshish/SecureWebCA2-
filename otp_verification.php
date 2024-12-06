@@ -6,14 +6,17 @@ if (!isset($_SESSION['temp_user'])) {
     header("Location: index.php");
     exit();
 }
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $user_otp = $_POST['otp'];
+    $user_otp = filter_input(INPUT_POST, 'otp', FILTER_SANITIZE_NUMBER_INT);
     $stored_otp = $_SESSION['temp_user']['otp'];
     $user_id = $_SESSION['temp_user']['id'];
 
-    $sql = "SELECT * FROM users WHERE id='$user_id' AND otp='$user_otp'";
-    $query = mysqli_query($conn, $sql);
-    $data = mysqli_fetch_array($query);
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id=? AND otp=?");
+    $stmt->bind_param("is", $user_id, $user_otp);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_assoc();
 
     if ($data) {
         $otp_expiry = strtotime($data['otp_expiry']);
@@ -24,15 +27,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             ?>
-                <script>
-    alert("OTP has expired. Please try again.");
-    function navigateToPage() {
-        window.location.href = 'index.php';
-    }
-    window.onload = function() {
-        navigateToPage();
-    }
-</script>
+            <script>
+                alert("OTP has expired. Please try again.");
+                function navigateToPage() {
+                    window.location.href = 'index.php';
+                }
+                window.onload = function() {
+                    navigateToPage();
+                }
+            </script>
             <?php 
         }
     } else {
@@ -46,38 +49,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>Two-Step Verification</title>
     <style type="text/css">
-        #container{
+        #container {
             border: 1px solid black;
             width: 400px;
             margin-left: 400px;
             margin-top: 50px;
             height: 330px;
         }
-        form{
+        form {
             margin-left: 50px;
         }
-        p{
+        p {
             margin-left: 50px;
         }
-        h1{
+        h1 {
             margin-left: 50px;
         }
-        input[type=number]{
+        input[type=number] {
             width: 290px;
             padding: 10px;
             margin-top: 10px;
-
         }
-        button{
+        button {
             background-color: orange;
             border: 1px solid orange;
             width: 100px;
             padding: 9px;
             margin-left: 100px;
         }
-        button:hover{
+        button:hover {
             cursor: pointer;
             opacity: .9;
         }
@@ -86,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div id="container">
         <h1>Two-Step Verification</h1>
-        <p>Enter the 6 Digit OTP Code that has been sent <br> to your email address: <?php echo $_SESSION['email']; ?></p>
+        <p>Enter the 6 Digit OTP Code that has been sent <br> to your email address.</p>
         <form method="post" action="otp_verification.php">
             <label style="font-weight: bold; font-size: 18px;" for="otp">Enter OTP Code:</label><br>
             <input type="number" name="otp" pattern="\d{6}" placeholder="Six-Digit OTP" required><br><br>
@@ -95,4 +97,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </body>
 </html>
-

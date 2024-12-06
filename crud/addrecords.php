@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-
+<?php include_once "connection.php" ?>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -45,14 +45,39 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php">CRUD Using PHP/MySQL</a>
+                <a class="navbar-brand" href="#">CRUD Using PHP/MySQL</a>
             </div>
      
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
+                        <?php
+                            // auto redirect to index.php if user is logged in
+                        if (isset($_SESSION['user_id'])) {
+                            // auto redirect to crud/index.php if user is admin
+                            $user_id = $_SESSION['user_id'];
+                            $sql = "SELECT roles FROM users WHERE id='$user_id'";
+                            $query = mysqli_query($conn, $sql);
+                            $data = mysqli_fetch_array($query);
+
+                            if ($data['roles'] == 'admin') {
+                                header("Location: crud/index.php");
+                                ?>
                         <a href="index.php"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                              <?php  
+                            } else {
+                                header("Location: crud/user.php");
+                                ?>
+                        <a href="user.php"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                                <?php
+                            }
+                            exit();
+
+                            }
+                            ?>
+                       
+
                         <a href="addrecords.php"><i class="fa fa-fw fa-plus"></i> Add Records</a>
                         <a href="../logout.php"><i class="fa fa-fw fa-sign-out"></i> Logout</a>
                     </li>
@@ -70,7 +95,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                           PHP CRUD <small>Create, Read, Update and Delete</small>
+                           PHP CRUD <small>Add</small>
                         </h1>
                        
                     </div>
