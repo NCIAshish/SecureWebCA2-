@@ -58,7 +58,7 @@ if (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'alab8438@gmail.com'; //host email 
-            $mail->Password = 'cqdzxirjkwzabwre'; // app password of your host email
+            $mail->Password = 'Secret Code Here'; // app password of your host email
             $mail->Port = 587;
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->isHTML(true);
