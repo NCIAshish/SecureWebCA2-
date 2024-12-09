@@ -51,33 +51,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Two-Step Verification</title>
     <style type="text/css">
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
         #container {
             border: 1px solid black;
             width: 400px;
-            margin-left: 400px;
-            margin-top: 50px;
-            height: 330px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         form {
-            margin-left: 50px;
+            margin-top: 20px;
         }
         p {
-            margin-left: 50px;
+            margin-top: 10px;
         }
         h1 {
-            margin-left: 50px;
+            margin-top: 0;
         }
         input[type=number] {
-            width: 290px;
+            width: 100%;
             padding: 10px;
             margin-top: 10px;
         }
         button {
             background-color: orange;
             border: 1px solid orange;
-            width: 100px;
-            padding: 9px;
-            margin-left: 100px;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
         }
         button:hover {
             cursor: pointer;

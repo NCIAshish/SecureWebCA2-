@@ -12,6 +12,19 @@ session_set_cookie_params([
 
 session_start();
 
+// Set session timeout duration (e.g., 30 minutes)
+$timeout_duration = 1800;
+
+// Check if the user is logged in and if the session has timed out
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
+    // Last request was more than 30 minutes ago
+    session_unset();     // Unset $_SESSION variable for the run-time
+    session_destroy();   // Destroy session data in storage
+    header("Location: index.php"); // Redirect to login page
+    exit();
+}
+$_SESSION['LAST_ACTIVITY'] = time(); // Update last activity time stamp
+
 include 'conn.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -58,7 +71,7 @@ if (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'alab8438@gmail.com'; //host email 
-            $mail->Password = 'Secret Code Here'; // app password of your host email
+            $mail->Password = 'Secret Code'; // app password of your host email
             $mail->Port = 587;
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->isHTML(true);
@@ -74,10 +87,11 @@ if (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response
             $_SESSION['temp_user'] = ['id' => $data['id'], 'otp' => $otp];
             header("Location: otp_verification.php");
             exit();
-        } else {
+        } 
+        else {
             ?>
             <script>
-                alert("Invalid Captcha. Please try again.");
+                alert("Invalid Email or Password. Please try again.");
                 function navigateToPage() {
                     window.location.href = 'index.php';
                 }
@@ -87,10 +101,12 @@ if (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response
             </script>
             <?php
         }
-    } else {
+        
+    } 
+    else {
         ?>
         <script>
-            alert("Invalid Email or Password. Please try again.");
+            alert("Invalid Captcha. Please try again.");
             function navigateToPage() {
                 window.location.href = 'index.php';
             }
@@ -116,12 +132,19 @@ if (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response
     </script>
     <title></title>
     <style type="text/css">
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+          
+        }
         #container {
-            margin-left: 400px;
             border: 1px solid black;
             width: 440px;
             padding: 20px;
-            margin-top: 40px;
+            background-color: rgba(255, 255, 255, 0.8); 
         }
         input[type=text], input[type=password] {
             width: 300px;
