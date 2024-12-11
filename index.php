@@ -47,6 +47,37 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
+
+
+
+
+// Define maximum login attempts and lockout time
+define('MAX_LOGIN_ATTEMPTS', 3);
+define('LOCKOUT_TIME', 300); // 15 minutes
+
+// Check if the user is locked out
+if (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] >= MAX_LOGIN_ATTEMPTS) {
+    if (time() - $_SESSION['last_login_attempt'] < LOCKOUT_TIME) {
+        echo "<script>alert('Too many login attempts. Please try again later.');</script>";
+        exit;
+    } else {
+        // Reset login attempts after lockout time has passed
+        $_SESSION['login_attempts'] = 0;
+    }
+}
+
+// Increment login attempts on each login attempt
+if (isset($_POST['login'])) {
+    if (!isset($_SESSION['login_attempts'])) {
+        $_SESSION['login_attempts'] = 0;
+    }
+    $_SESSION['login_attempts']++;
+    $_SESSION['last_login_attempt'] = time();
+}
+
+
+
+
 if (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response'])) {
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         $email = mysqli_real_escape_string($conn, $_POST['email']);
